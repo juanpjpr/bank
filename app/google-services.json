@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "843729763621",
+    "project_id": "bank-4b24c",
+    "storage_bucket": "bank-4b24c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:843729763621:android:2c695decee92c6b851aecc",
+        "android_client_info": {
+          "package_name": "com.example.bankchallenge"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCp4tv1LxYBct4ctpa1zyHT8QHHQzq5oZc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

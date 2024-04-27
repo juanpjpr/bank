@@ -4,6 +4,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("dagger.hilt.android.plugin")
     id("kotlin-kapt")
+    id("com.google.gms.google-services")
 
 }
 
@@ -89,5 +90,6 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.4")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
 
+    implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
 
 }

@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun LoginScreen(onLoginClick: () -> Unit, onRegisterClick: () -> Unit) {
+fun LoginScreen() {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -76,11 +76,11 @@ fun LoginScreen(onLoginClick: () -> Unit, onRegisterClick: () -> Unit) {
             )
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onLoginClick) {
+        Button(onClick = {}) {
             Text("Login")
         }
         Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = onRegisterClick) {
+        Button(onClick = {  }) {
             Text("Register")
         }
     }
@@ -91,7 +91,7 @@ fun LoginScreen(onLoginClick: () -> Unit, onRegisterClick: () -> Unit) {
 fun PreviewLoginScreen() {
     MaterialTheme {
         Surface {
-            LoginScreen(onLoginClick = {}, onRegisterClick = {})
+            LoginScreen()
         }
     }
 }

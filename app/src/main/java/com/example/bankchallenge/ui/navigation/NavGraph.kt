@@ -12,10 +12,10 @@ import com.example.bankchallenge.ui.screens.registration.RegisterScreen
 @Composable
 fun NavGraph() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Screen.Home.route) {
-        //composable(Screen.Login.route) { LoginScreen() }
+    NavHost(navController = navController, startDestination = Screen.Login.route) {
+        composable(Screen.Login.route) { LoginScreen() }
         composable(Screen.Home.route) { HomeScreen() }
-        //composable(Screen.Register.route) { RegisterScreen() }
+       // composable(Screen.Register.route) { RegisterScreen() }
     }
 }
 

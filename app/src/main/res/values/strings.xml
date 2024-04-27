@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">BankChallenge</string>
+
+    <string name="error_email_format">No es un email válido o el formato esperado es asd@gmail.com</string>
+    <string name="error_email_empty">El email esta vacio</string>
+
 </resources>

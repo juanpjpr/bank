@@ -1,15 +1,17 @@
 package com.example.bankchallenge.ui.screens.registration
 
+import android.net.Uri
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.bankchallenge.R
+import com.example.bankchallenge.utils.UriProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.regex.Pattern
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor() : ViewModel() {
+class RegisterViewModel @Inject constructor(uriProvider: UriProvider) : ViewModel() {
 
     private val emailPattern = Pattern.compile("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
     private val passwordPattern =
@@ -32,6 +34,22 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
 
     private val _passwordError = mutableStateOf<Int?>(null)
     val passwordError: State<Int?> = _passwordError
+
+    private val _availableUri = mutableStateOf(Uri.EMPTY)
+    val availableUri: State<Uri> = _availableUri
+
+    init {
+        _availableUri.value = uriProvider.newUri()
+    }
+
+
+    fun onNameChanged(name: String) {
+        _name.value = name
+    }
+
+    fun onSurnameChanged(surname: String) {
+        _surname.value = surname
+    }
 
     fun onEmailChanged(email: String) {
         _email.value = email

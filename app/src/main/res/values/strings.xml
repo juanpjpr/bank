@@ -13,5 +13,7 @@
     <string name="login_hide_password">Ocultar contraseña</string>
     <string name="login_email">Ingrese email</string>
 
+    <string name="register_camera_revoke">No tiene permisos para utilizar la camara</string>
+
 
 </resources>

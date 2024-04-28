@@ -1,5 +1,11 @@
 package com.example.bankchallenge.ui.screens.registration
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,11 +28,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bankchallenge.R
 
@@ -43,8 +51,8 @@ fun RegisterScreen(onRegistrationSuccess: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TextField(
-            value = "",
-            onValueChange = { },
+            value = viewModel.name.value,
+            onValueChange = { viewModel.onNameChanged(it) },
             label = { Text("Name") },
             leadingIcon = {
                 Icon(
@@ -57,8 +65,8 @@ fun RegisterScreen(onRegistrationSuccess: () -> Unit) {
                 .padding(bottom = 16.dp)
         )
         TextField(
-            value = "",
-            onValueChange = { },
+            value = viewModel.surname.value,
+            onValueChange = { viewModel.onSurnameChanged(it) },
             label = { Text("Surname") },
             leadingIcon = {
                 Icon(
@@ -114,10 +122,51 @@ fun RegisterScreen(onRegistrationSuccess: () -> Unit) {
         viewModel.passwordError.value?.let {
             Text(text = stringResource(id = it), color = MaterialTheme.colorScheme.error)
         }
-        Button(onClick = { }) {
-            Icon(imageVector = Icons.Filled.CameraAlt, contentDescription = "foto")
-            Text("Tomar foto")
+        PhotoPicker(availableUri = viewModel.availableUri.value)
+
+    }
+}
+
+
+@Composable
+private fun PhotoPicker(
+    availableUri: Uri,
+) {
+    val context = LocalContext.current
+    val cameraLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
+            if (it) {
+                //TODO
+            }
         }
+
+    val launchCamera = { cameraLauncher.launch(availableUri) }
+    val cameraPermissionRevokedText =
+        stringResource(id = R.string.register_camera_revoke)
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            launchCamera()
+        } else {
+            Toast.makeText(context, cameraPermissionRevokedText, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    Button(
+        onClick = {
+            if (PackageManager.PERMISSION_GRANTED ==
+                ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+            ) {
+                launchCamera()
+            } else {
+                permissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+        },
+    ) {
+        Icon(imageVector = Icons.Filled.CameraAlt, contentDescription = "foto")
+        Text("Tomar foto")
     }
 }
 

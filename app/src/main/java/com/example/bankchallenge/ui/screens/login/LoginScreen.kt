@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -25,6 +26,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.rememberNavController
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -54,7 +56,7 @@ fun LoginScreen() {
             )
         )
         viewModel.emailError.value?.let {
-            Text(text = stringResource(id = it))
+            Text(text = stringResource(id = it),color = MaterialTheme.colorScheme.error)
         }
 
         TextField(
@@ -72,6 +74,10 @@ fun LoginScreen() {
                 }
             )
         )
+        viewModel.passwordError.value?.let {
+            Text(text = stringResource(id = it),color = MaterialTheme.colorScheme.error)
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = { viewModel.loginClick() }) {
             Text("Login")

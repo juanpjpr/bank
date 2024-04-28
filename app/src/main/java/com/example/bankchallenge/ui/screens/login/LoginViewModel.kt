@@ -17,6 +17,8 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val emailPattern = Pattern.compile("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
+    private val passwordPattern = Pattern.compile("^(?=.*[A-Z])(?=.*[!@#\$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])(?=\\S+\$).{6,}\$")
+
 
 
     private val _email = mutableStateOf("")
@@ -28,13 +30,17 @@ class LoginViewModel @Inject constructor(
     private val _emailError = mutableStateOf<Int?>(null)
     val emailError: State<Int?> = _emailError
 
-    fun onEmailChanged(string: String) {
-        _email.value = string
-        validateEmail(string)
+    private val _passwordError = mutableStateOf<Int?>(null)
+    val passwordError: State<Int?> = _passwordError
+
+    fun onEmailChanged(email: String) {
+        _email.value = email
+        validateEmail(email)
     }
 
-    fun onPasswordChanged(string: String) {
-        _password.value = string
+    fun onPasswordChanged(pass: String) {
+        _password.value = pass
+        validatePassword(pass)
     }
 
     fun loginClick(){
@@ -46,8 +52,16 @@ class LoginViewModel @Inject constructor(
     private fun validateEmail(email: String) {
         _emailError.value = if (email.isBlank()) {
             R.string.error_email_empty
-        } else if (emailPattern.matcher(email).matches()) {
+        } else if (!emailPattern.matcher(email).matches()) {
             R.string.error_email_format
+        } else null
+    }
+
+    private fun validatePassword(password: String) {
+        _passwordError.value = if (password.isBlank()) {
+            R.string.error_password_empty
+        } else if (!passwordPattern.matcher(password).matches()) {
+            R.string.error_password_format
         } else null
     }
 

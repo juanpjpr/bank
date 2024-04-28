@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">BankChallenge</string>
 
-    <string name="error_email_format">No es un email válido o el formato esperado es asd@gmail.com</string>
+    <string name="error_email_format">No es un email válido, el formato esperado es asd@gmail.com</string>
     <string name="error_email_empty">El email esta vacio</string>
-
+    <string name="error_password_empty">Contraseña vacia</string>
+    <string name="error_password_format">Formato contraseña incorrecto, debe tener una mayuscula, un caracter especial y 6 caracteres como minimo</string>
     <string name="error_login_generic">Hubo un error inesperado, verifica los datos ingresados</string>
     <string name="error_login_network">Hubo un error de conexion, revisa tu conexion</string>
+
 
 </resources>

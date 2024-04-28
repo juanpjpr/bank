@@ -8,5 +8,9 @@
     <string name="error_login_generic">Hubo un error inesperado, verifica los datos ingresados</string>
     <string name="error_login_network">Hubo un error de conexion, revisa tu conexion</string>
 
+    <string name="login_show_password">Mostrar contraseña</string>
+    <string name="login_hide_password">Ocultar contraseña</string>
+    <string name="login_email">Ingrese email</string>
+
 
 </resources>

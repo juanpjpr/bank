@@ -36,7 +36,7 @@ import com.example.bankchallenge.R
 
 
 @Composable
-fun LoginScreen(onSuccessfulLogin: () -> Unit) {
+fun LoginScreen(onRegisterClicked: ()-> Unit,onSuccessfulLogin: () -> Unit) {
     val viewModel = hiltViewModel<LoginViewModel>()
     val showPassword = remember { mutableStateOf(false) }
 
@@ -105,7 +105,7 @@ fun LoginScreen(onSuccessfulLogin: () -> Unit) {
             Text("Login")
         }
         Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = { }) {
+        Button(onClick = { onRegisterClicked() }) {
             Text("Register")
         }
     }
@@ -116,7 +116,9 @@ fun LoginScreen(onSuccessfulLogin: () -> Unit) {
 fun PreviewLoginScreen() {
     MaterialTheme {
         Surface {
-            LoginScreen {}
+            LoginScreen({}) {
+
+            }
         }
     }
 }

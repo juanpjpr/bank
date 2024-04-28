@@ -73,7 +73,7 @@ fun LoginScreen() {
             )
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {}) {
+        Button(onClick = { viewModel.loginClick() }) {
             Text("Login")
         }
         Spacer(modifier = Modifier.height(8.dp))

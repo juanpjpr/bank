@@ -36,7 +36,7 @@ import com.example.bankchallenge.R
 
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(onSuccessfulLogin: () -> Unit) {
     val viewModel = hiltViewModel<LoginViewModel>()
     val showPassword = remember { mutableStateOf(false) }
 
@@ -96,9 +96,12 @@ fun LoginScreen() {
         viewModel.passwordError.value?.let {
             Text(text = stringResource(id = it), color = MaterialTheme.colorScheme.error)
         }
+        viewModel.loginError.value?.let {
+            Text(text = stringResource(id = it), color = MaterialTheme.colorScheme.error)
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { viewModel.loginClick() }) {
+        Button(onClick = { viewModel.loginClick(onSuccessfulLogin) }) {
             Text("Login")
         }
         Spacer(modifier = Modifier.height(8.dp))

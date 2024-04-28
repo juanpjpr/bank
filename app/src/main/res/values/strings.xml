@@ -7,6 +7,7 @@
     <string name="error_password_format">Formato contraseña incorrecto, debe tener una mayuscula, un caracter especial y 6 caracteres como minimo</string>
     <string name="error_login_generic">Hubo un error inesperado, verifica los datos ingresados</string>
     <string name="error_login_network">Hubo un error de conexion, revisa tu conexion</string>
+    <string name="error_login">No se pudo iniciar sesion, revisar mail y contraseña</string>
 
     <string name="login_show_password">Mostrar contraseña</string>
     <string name="login_hide_password">Ocultar contraseña</string>

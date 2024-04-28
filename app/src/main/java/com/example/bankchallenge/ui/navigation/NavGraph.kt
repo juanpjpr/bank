@@ -7,15 +7,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.bankchallenge.ui.screens.home.HomeScreen
 import com.example.bankchallenge.ui.screens.login.LoginScreen
-import com.example.bankchallenge.ui.screens.registration.RegisterScreen
 
 @Composable
 fun NavGraph() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.Login.route) {
-        composable(Screen.Login.route) { LoginScreen() }
+        composable(Screen.Login.route) { LoginScreen { navController.navigate("home") } }
         composable(Screen.Home.route) { HomeScreen() }
-       // composable(Screen.Register.route) { RegisterScreen() }
+        // composable(Screen.Register.route) { RegisterScreen() }
     }
 }
 

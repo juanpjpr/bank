@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankchallenge.R
+import com.example.bankchallenge.domain.common.Result
 import com.example.bankchallenge.domain.usescases.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -17,8 +18,8 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val emailPattern = Pattern.compile("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
-    private val passwordPattern = Pattern.compile("^(?=.*[A-Z])(?=.*[!@#\$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])(?=\\S+\$).{6,}\$")
-
+    private val passwordPattern =
+        Pattern.compile("^(?=.*[A-Z])(?=.*[!@#\$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])(?=\\S+\$).{6,}\$")
 
 
     private val _email = mutableStateOf("")
@@ -33,6 +34,9 @@ class LoginViewModel @Inject constructor(
     private val _passwordError = mutableStateOf<Int?>(null)
     val passwordError: State<Int?> = _passwordError
 
+    private val _loginError = mutableStateOf<Int?>(null)
+    val loginError: State<Int?> = _loginError
+
     fun onEmailChanged(email: String) {
         _email.value = email
         validateEmail(email)
@@ -43,10 +47,17 @@ class LoginViewModel @Inject constructor(
         validatePassword(pass)
     }
 
-    fun loginClick(){
-        viewModelScope.launch{
-            loginUseCase.login(_email.value,_password.value)
+    fun loginClick(onSuccessfulLogin: () -> Unit) {
+        viewModelScope.launch {
+            when (loginUseCase.login(_email.value, _password.value)) {
+                is Result.Error -> onFailureLogin()
+                is Result.Success -> onSuccessfulLogin()
+            }
         }
+    }
+
+    private fun onFailureLogin() {
+        _loginError.value = R.string.error_login
     }
 
     private fun validateEmail(email: String) {

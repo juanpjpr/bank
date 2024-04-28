@@ -1,5 +1,7 @@
 package com.example.bankchallenge.ui.screens.home
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,23 +21,61 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.bankchallenge.domain.model.Movement
+import com.example.bankchallenge.ui.screens.home.domain.ViewState
 
 @Composable
 fun HomeScreen(
 ) {
+    val viewModel = hiltViewModel<HomeViewModel>()
+    when (val state = viewModel.view.value) {
 
+        ViewState.Home -> HomeView(viewModel)
+        is ViewState.MovementDetail -> MovementDetailView(
+            viewModel = viewModel,
+            movement = state.movement
+        )
+    }
+}
+
+@Composable
+fun MovementDetailView(viewModel: HomeViewModel, movement: Movement) {
+    BackHandler {
+        viewModel.onBackFromDetail()
+    }
+    Scaffold(
+        topBar = { Text(text = "Detalle de movimiento") }
+    ) {
+        Column(modifier = Modifier.padding(it)) {
+            Text(text = "Movements Detail")
+            Text(text = "Description: ${movement.description}")
+            Text(text = "Monto: ${movement.amount}")
+        }
+    }
+}
+
+@Composable
+fun HomeView(viewModel: HomeViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(text = "Balance: $1234", style = MaterialTheme.typography.titleLarge)
+
+        Text(
+            text = "Balance: ${viewModel.balance.value}",
+            style = MaterialTheme.typography.titleLarge
+        )
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Movimientos:", style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(8.dp))
-        TransactionList(movements = movements, onTransactionClick = { })
+        TransactionList(
+            movements = viewModel.movements.value,
+            onTransactionClick = { viewModel.onMovementClicked(it) })
     }
 }
+
 
 @Composable
 fun TransactionList(
@@ -43,7 +84,7 @@ fun TransactionList(
 ) {
     LazyColumn {
         itemsIndexed(movements) { index, transaction ->
-            TransactionItem(movement = transaction, onTransactionClick = onTransactionClick)
+            TransactionItem(movement = transaction, onTransactionClick = { onTransactionClick(it) })
             if (index != movements.size - 1) Divider()
         }
     }
@@ -56,7 +97,9 @@ fun TransactionItem(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(vertical = 8.dp)
+        modifier = Modifier
+            .clickable { onTransactionClick(movement) }
+            .padding(vertical = 8.dp)
     ) {
         Text(
             text = movement.description,
@@ -79,17 +122,5 @@ fun PreviewHomeScreen() {
     HomeScreen()
 }
 
-data class Movement(
-    val id: String,
-    val description: String,
-    val amount: Double
-)
 
-val movements = listOf(
-    Movement(id = "1", description = "Compra en el supermercado", amount = -25.0),
-    Movement(id = "2", description = "Depósito de salario", amount = 1500.0),
-    Movement(id = "3", description = "Pago de factura de luz", amount = -50.0),
-    Movement(id = "4", description = "Retiro de cajero automático", amount = -100.0),
-    Movement(id = "5", description = "Transferencia a cuenta de ahorros", amount = -200.0)
-)
 

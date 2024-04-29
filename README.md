@@ -5,7 +5,7 @@ This repository contains the source code for the Android Stori Banking Applicati
 
 ## Project Structure
 The project follows a standard Android application structure, with separate modules for presentation, data, and domain layers. Key components include:
-- `app`: Main application module containing UI components and navigation logic.
+- `ui`: Main application module containing UI components and navigation logic.
 - `data`: Module responsible for data handling, including database operations and network requests.
 - `domain`: Module defining the core business logic and entities of the application.
 

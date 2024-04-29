@@ -15,5 +15,8 @@
 
     <string name="register_camera_revoke">No tiene permisos para utilizar la camara</string>
 
+    <string name="register_photo_id">ID photo</string>
+    <string name="register_error_photo">Error al sacar la foto, intentelo otra vez</string>
+
 
 </resources>

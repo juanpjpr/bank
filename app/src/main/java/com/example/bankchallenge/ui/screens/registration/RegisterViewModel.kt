@@ -38,10 +38,24 @@ class RegisterViewModel @Inject constructor(uriProvider: UriProvider) : ViewMode
     private val _availableUri = mutableStateOf(Uri.EMPTY)
     val availableUri: State<Uri> = _availableUri
 
+    private val _uriError = mutableStateOf<Int?>(null)
+    val uriError: State<Int?> = _uriError
+
+    private val _uri = mutableStateOf<Uri?>(null)
+    val uri: State<Uri?> = _uri
+
     init {
         _availableUri.value = uriProvider.newUri()
     }
 
+    fun onUriLoaded(uri: Uri?) {
+        if (uri != null) {
+            _uriError.value = null
+            _uri.value = uri
+        } else {
+            _uriError.value = R.string.register_error_photo
+        }
+    }
 
     fun onNameChanged(name: String) {
         _name.value = name

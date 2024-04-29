@@ -6,11 +6,13 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Email
@@ -36,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
 import com.example.bankchallenge.R
 
 
@@ -122,8 +125,24 @@ fun RegisterScreen(onRegistrationSuccess: () -> Unit) {
         viewModel.passwordError.value?.let {
             Text(text = stringResource(id = it), color = MaterialTheme.colorScheme.error)
         }
-        PhotoPicker(availableUri = viewModel.availableUri.value)
+        PhotoPicker(
+            availableUri = viewModel.availableUri.value,
+            onUriLoaded = { viewModel.onUriLoaded(it) })
+        viewModel.uriError.value?.let {
+            Text(text = stringResource(id = it), color = MaterialTheme.colorScheme.error)
+        }
 
+        if (viewModel.uri.value != null) {
+            Image(
+                modifier = Modifier.size(144.dp),
+                painter = rememberAsyncImagePainter(viewModel.uri.value),
+                contentDescription = stringResource(id = R.string.register_photo_id),
+            )
+        }
+
+        Button(onClick = { /*TODO*/ }) {
+            Text("Register")
+        }
     }
 }
 
@@ -131,12 +150,14 @@ fun RegisterScreen(onRegistrationSuccess: () -> Unit) {
 @Composable
 private fun PhotoPicker(
     availableUri: Uri,
+    onUriLoaded: (Uri?) -> Unit
 ) {
     val context = LocalContext.current
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
             if (it) {
-                //TODO
+                onUriLoaded(availableUri)
+
             }
         }
 
@@ -166,7 +187,7 @@ private fun PhotoPicker(
         },
     ) {
         Icon(imageVector = Icons.Filled.CameraAlt, contentDescription = "foto")
-        Text("Tomar foto")
+        Text("Profile pi")
     }
 }
 

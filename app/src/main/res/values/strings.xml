@@ -18,5 +18,11 @@
     <string name="register_photo_id">ID photo</string>
     <string name="register_error_photo">Error al sacar la foto, intentelo otra vez</string>
 
+    <string name="register_firebase_email_collision">Email ya en uso</string>
+    <string name="register_firebase_weak_pass">Contraseña demaciado debil</string>
+    <string name="register_firebase_error_invalid_credentials">Email invalido</string>
+    <string name="register_firebase_unknown">Error desconocido</string>
+    <string name="register_firebase_network">Error de conexion, intente otra vez</string>
+
 
 </resources>

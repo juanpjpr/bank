@@ -140,7 +140,7 @@ fun RegisterScreen(onRegistrationSuccess: () -> Unit) {
             )
         }
 
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = { viewModel.onRegisterClick() }) {
             Text("Register")
         }
     }

@@ -30,10 +30,10 @@ class AuthRepository @Inject constructor() {
         return if (error == null) Result.Success(Unit) else Result.Error(error!!)
     }
 
-    suspend fun registerEmailAndPass(newUser: NewUser): Result<Unit> {
+    suspend fun registerEmailAndPass(email: String,password: String): Result<Unit> {
         var error: Int? = null
 
-        val task = firebaseAuth.createUserWithEmailAndPassword(newUser.email, newUser.password)
+        val task = firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnFailureListener {
                 error = when (it) {
                     is FirebaseAuthUserCollisionException -> R.string.register_firebase_email_collision
@@ -52,8 +52,8 @@ class AuthRepository @Inject constructor() {
         return if (error == null) Result.Success(Unit) else Result.Error(error!!)
     }
 
-    suspend fun registerSecondaryData(newUser: NewUser){
-
+    suspend fun getUserId(): String?{
+        return firebaseAuth.currentUser?.uid
     }
 
 }

@@ -23,6 +23,8 @@
     <string name="register_firebase_error_invalid_credentials">Email invalido</string>
     <string name="register_firebase_unknown">Error desconocido</string>
     <string name="register_firebase_network">Error de conexion, intente otra vez</string>
+    <string name="register_firebase_error_id">Error al intentar obtener el id</string>
+    <string name="register_firebase_save_user_error">Error al intentar guardar el nuevo usuario, intente mas tarde</string>
 
 
 </resources>

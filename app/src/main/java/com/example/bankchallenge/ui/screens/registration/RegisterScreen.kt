@@ -139,8 +139,11 @@ fun RegisterScreen(onRegistrationSuccess: () -> Unit) {
                 contentDescription = stringResource(id = R.string.register_photo_id),
             )
         }
+        viewModel.failureRegister.value?.let {
+            Text(text = stringResource(id = it), color = MaterialTheme.colorScheme.error)
+        }
 
-        Button(onClick = { viewModel.onRegisterClick() }) {
+        Button(onClick = { viewModel.onRegisterClick(onRegistrationSuccess) }) {
             Text("Register")
         }
     }

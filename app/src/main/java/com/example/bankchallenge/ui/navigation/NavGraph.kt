@@ -8,10 +8,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.bankchallenge.ui.screens.home.HomeScreen
 import com.example.bankchallenge.ui.screens.login.LoginScreen
 import com.example.bankchallenge.ui.screens.registration.RegisterScreen
+import com.example.bankchallenge.ui.screens.success.SuccessScreen
 
 private const val HOME_ROUTE = "home"
 private const val REGISTER_ROUTE = "register"
 private const val LOGIN_ROUTE = "login"
+private const val SUCCESS_ROUTE = "success"
 
 @Composable
 fun NavGraph() {
@@ -26,6 +28,8 @@ fun NavGraph() {
         }
         composable(HOME_ROUTE) { HomeScreen() }
 
-        composable(REGISTER_ROUTE) { RegisterScreen { navController.navigate(HOME_ROUTE) } }
+        composable(REGISTER_ROUTE) { RegisterScreen { navController.navigate(SUCCESS_ROUTE) } }
+
+        composable(SUCCESS_ROUTE) { SuccessScreen { navController.navigate(HOME_ROUTE) } }
     }
 }

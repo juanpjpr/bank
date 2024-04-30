@@ -2,7 +2,6 @@ package com.example.bankchallenge.data.repository
 
 import com.example.bankchallenge.R
 import com.example.bankchallenge.domain.common.Result
-import com.example.bankchallenge.domain.model.NewUser
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
@@ -30,7 +29,7 @@ class AuthRepository @Inject constructor() {
         return if (error == null) Result.Success(Unit) else Result.Error(error!!)
     }
 
-    suspend fun registerEmailAndPass(email: String,password: String): Result<Unit> {
+    suspend fun registerEmailAndPass(email: String, password: String): Result<Unit> {
         var error: Int? = null
 
         val task = firebaseAuth.createUserWithEmailAndPassword(email, password)
@@ -52,7 +51,7 @@ class AuthRepository @Inject constructor() {
         return if (error == null) Result.Success(Unit) else Result.Error(error!!)
     }
 
-    suspend fun getUserId(): String?{
+    suspend fun getUserId(): String? {
         return firebaseAuth.currentUser?.uid
     }
 

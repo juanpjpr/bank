@@ -6,11 +6,10 @@ import com.example.bankchallenge.domain.model.NewUser
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class UsersRepository(
+class UsersRepository @Inject constructor() {
     private val database: FirebaseFirestore = FirebaseFirestore.getInstance()
-) {
-
     suspend fun registerData(newUser: NewUser): Result<Unit> {
 
         var error: Int? = null

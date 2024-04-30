@@ -15,8 +15,11 @@ class UsersRepository @Inject constructor() {
         var error: Int? = null
 
         val task = database.collection("users").document(newUser.userID).set(newUser)
-            .addOnFailureListener { error = R.string.register_firebase_save_user_error }
+            .addOnFailureListener {
+                error = R.string.register_firebase_save_user_error
+            }
         Tasks.whenAllComplete(task).await()
+
 
         return if (error != null) Result.Error(error!!) else Result.Success(Unit)
     }

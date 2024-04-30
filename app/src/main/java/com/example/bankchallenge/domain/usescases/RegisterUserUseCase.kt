@@ -20,10 +20,10 @@ class RegisterUserUseCase @Inject constructor(
     ): Result<Unit> {
         authRepository.registerEmailAndPass(email, password)
         val userId = authRepository.getUserId()
-        if (userId != null) {
-            return usersRepository.registerData(NewUser(userId, name, surname))
+        return if (userId != null) {
+            usersRepository.registerData(NewUser(userId, name, surname))
         } else {
-            return Result.Error(R.string.register_firebase_error_id)
+            Result.Error(R.string.register_firebase_error_id)
         }
     }
 }

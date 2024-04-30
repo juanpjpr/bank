@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankchallenge.R
+import com.example.bankchallenge.domain.common.Result
 import com.example.bankchallenge.domain.usescases.RegisterUserUseCase
 import com.example.bankchallenge.utils.UriProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -50,6 +51,9 @@ class RegisterViewModel @Inject constructor(
     private val _uri = mutableStateOf<Uri?>(null)
     val uri: State<Uri?> = _uri
 
+    private val _failureRegister = mutableStateOf<Int?>(null)
+    val failureRegister: State<Int?> = _failureRegister
+
     init {
         _availableUri.value = uriProvider.newUri()
     }
@@ -81,12 +85,23 @@ class RegisterViewModel @Inject constructor(
         validatePassword(pass)
     }
 
-    fun onRegisterClick() {
+    fun onRegisterClick(onSuccessfulLogin: () -> Unit) {
         viewModelScope.launch {
-            registerUser.register(_email.value, _password.value, _name.value, _surname.value)
+            when (registerUser.register(
+                _email.value,
+                _password.value,
+                _name.value,
+                _surname.value
+            )) {
+                is Result.Error -> onFailureRegister()
+                is Result.Success -> onSuccessfulLogin()
+            }
         }
     }
 
+    private fun onFailureRegister() {
+        _failureRegister.value = R.string.register_error
+    }
 
     private fun validateEmail(email: String) {
         _emailError.value = if (email.isBlank()) {

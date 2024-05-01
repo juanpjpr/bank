@@ -100,9 +100,6 @@ fun LoginScreen(onRegisterClicked: () -> Unit, onSuccessfulLogin: () -> Unit) {
         viewModel.passwordError.value?.let {
             Text(text = stringResource(id = it), color = MaterialTheme.colorScheme.error)
         }
-        viewModel.loginError.value?.let {
-            Text(text = stringResource(id = it), color = MaterialTheme.colorScheme.error)
-        }
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = { viewModel.loginClick(onSuccessfulLogin) }) {
             Text("Login")

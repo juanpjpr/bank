@@ -6,20 +6,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankchallenge.R
 import com.example.bankchallenge.domain.common.Result
+import com.example.bankchallenge.domain.common.States
+import com.example.bankchallenge.domain.common.Validators
 import com.example.bankchallenge.domain.usescases.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.util.regex.Pattern
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase
 ) : ViewModel() {
-
-    private val emailPattern = Pattern.compile("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
-    private val passwordPattern =
-        Pattern.compile("^(?=.*[A-Z])(?=.*[!@#\$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])(?=\\S+\$).{6,}\$")
 
 
     private val _email = mutableStateOf("")
@@ -37,20 +37,29 @@ class LoginViewModel @Inject constructor(
     private val _loginError = mutableStateOf<Int?>(null)
     val loginError: State<Int?> = _loginError
 
+    private val _loginUiStates = MutableStateFlow<States>(States.Idle)
+    val loginUiStates: StateFlow<States> = _loginUiStates.asStateFlow()
+
+    private val validators = Validators()
     fun onEmailChanged(email: String) {
         _email.value = email
-        validateEmail(email)
+        _emailError.value = validators.validateEmail(email)
     }
 
     fun onPasswordChanged(pass: String) {
         _password.value = pass
-        validatePassword(pass)
+        _passwordError.value = validators.validatePassword(pass)
     }
 
     fun loginClick(onSuccessfulLogin: () -> Unit) {
+        _loginUiStates.value = States.Loading
         viewModelScope.launch {
-            when (loginUseCase.login(_email.value, _password.value)) {
-                is Result.Error -> onFailureLogin()
+            when (val res = loginUseCase.login(_email.value, _password.value)) {
+                is Result.Error -> {
+                    _loginUiStates.value = States.Error(res.errorMessage!!)
+                    onFailureLogin()
+                }
+
                 is Result.Success -> onSuccessfulLogin()
             }
         }
@@ -60,20 +69,5 @@ class LoginViewModel @Inject constructor(
         _loginError.value = R.string.error_login
     }
 
-    private fun validateEmail(email: String) {
-        _emailError.value = if (email.isBlank()) {
-            R.string.error_email_empty
-        } else if (!emailPattern.matcher(email).matches()) {
-            R.string.error_email_format
-        } else null
-    }
-
-    private fun validatePassword(password: String) {
-        _passwordError.value = if (password.isBlank()) {
-            R.string.error_password_empty
-        } else if (!passwordPattern.matcher(password).matches()) {
-            R.string.error_password_format
-        } else null
-    }
 
 }

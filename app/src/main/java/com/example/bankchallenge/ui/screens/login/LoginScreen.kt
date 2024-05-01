@@ -20,6 +20,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,12 +35,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bankchallenge.R
+import com.example.bankchallenge.domain.common.States
 
 
 @Composable
-fun LoginScreen(onRegisterClicked: ()-> Unit,onSuccessfulLogin: () -> Unit) {
+fun LoginScreen(onRegisterClicked: () -> Unit, onSuccessfulLogin: () -> Unit) {
     val viewModel = hiltViewModel<LoginViewModel>()
     val showPassword = remember { mutableStateOf(false) }
+    val uiState by viewModel.loginUiStates.collectAsState()
 
     Column(
         modifier = Modifier
@@ -61,8 +65,7 @@ fun LoginScreen(onRegisterClicked: ()-> Unit,onSuccessfulLogin: () -> Unit) {
                 .fillMaxWidth()
                 .padding(bottom = 16.dp),
             keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next
+                keyboardType = KeyboardType.Email, imeAction = ImeAction.Next
             )
         )
         viewModel.emailError.value?.let {
@@ -99,12 +102,23 @@ fun LoginScreen(onRegisterClicked: ()-> Unit,onSuccessfulLogin: () -> Unit) {
         viewModel.loginError.value?.let {
             Text(text = stringResource(id = it), color = MaterialTheme.colorScheme.error)
         }
+        Spacer(modifier = Modifier.height(16.dp))
+        when (uiState) {
+            is States.Error -> {}
+            States.Idle -> {
+                Button(onClick = { viewModel.loginClick(onSuccessfulLogin) }) {
+                    Text("Login")
+                }
+            }
+
+            States.Loading -> Button(
+                onClick = { viewModel.loginClick(onSuccessfulLogin) }, enabled = false
+            ) {
+                Text("Login")
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { viewModel.loginClick(onSuccessfulLogin) }) {
-            Text("Login")
-        }
-        Spacer(modifier = Modifier.height(8.dp))
         Button(onClick = { onRegisterClicked() }) {
             Text("Register")
         }

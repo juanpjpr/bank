@@ -49,7 +49,7 @@ import com.example.bankchallenge.domain.common.States
 fun RegisterScreen(onRegistrationSuccess: () -> Unit) {
     val viewModel = hiltViewModel<RegisterViewModel>()
     val showPassword = remember { mutableStateOf(false) }
-    val uiState by viewModel.loginUiStates.collectAsState()
+    val uiState by viewModel.registerUiStates.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()

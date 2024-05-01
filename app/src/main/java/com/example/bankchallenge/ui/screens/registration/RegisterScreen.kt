@@ -42,14 +42,14 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.bankchallenge.R
-import com.example.bankchallenge.domain.common.States
+import com.example.bankchallenge.domain.common.ProcessState
 
 
 @Composable
 fun RegisterScreen(onRegistrationSuccess: () -> Unit) {
     val viewModel = hiltViewModel<RegisterViewModel>()
     val showPassword = remember { mutableStateOf(false) }
-    val uiState by viewModel.registerUiStates.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -146,20 +146,20 @@ fun RegisterScreen(onRegistrationSuccess: () -> Unit) {
         viewModel.failureRegister.value?.let {
             Text(text = stringResource(id = it), color = MaterialTheme.colorScheme.error)
         }
-        when (uiState) {
-            States.Idle -> {
+        when (viewModel.registerUiProcessState.value) {
+            ProcessState.Idle -> {
                 Button(onClick = { viewModel.onRegisterClick(onRegistrationSuccess) }) {
                     Text("Register")
                 }
             }
 
-            is States.Error -> {
+            is ProcessState.Error -> {
                 Button(onClick = { viewModel.onRegisterClick(onRegistrationSuccess) }) {
                     Text("Register")
                 }
             }
 
-            States.Loading -> {
+            ProcessState.Loading -> {
                 Button(
                     onClick = { viewModel.onRegisterClick(onRegistrationSuccess) },
                     enabled = false

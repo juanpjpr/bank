@@ -35,14 +35,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bankchallenge.R
-import com.example.bankchallenge.domain.common.States
+import com.example.bankchallenge.domain.common.ProcessState
 
 
 @Composable
 fun LoginScreen(onRegisterClicked: () -> Unit, onSuccessfulLogin: () -> Unit) {
     val viewModel = hiltViewModel<LoginViewModel>()
     val showPassword = remember { mutableStateOf(false) }
-    val uiState by viewModel.loginUiStates.collectAsState()
 
     Column(
         modifier = Modifier
@@ -103,15 +102,15 @@ fun LoginScreen(onRegisterClicked: () -> Unit, onSuccessfulLogin: () -> Unit) {
             Text(text = stringResource(id = it), color = MaterialTheme.colorScheme.error)
         }
         Spacer(modifier = Modifier.height(16.dp))
-        when (uiState) {
-            is States.Error -> {}
-            States.Idle -> {
+        when (viewModel.loginUiProcessState.value) {
+            is ProcessState.Error -> {}
+            ProcessState.Idle -> {
                 Button(onClick = { viewModel.loginClick(onSuccessfulLogin) }) {
                     Text("Login")
                 }
             }
 
-            States.Loading -> Button(
+            ProcessState.Loading -> Button(
                 onClick = { viewModel.loginClick(onSuccessfulLogin) }, enabled = false
             ) {
                 Text("Login")

@@ -2,9 +2,8 @@ package com.example.bankchallenge.domain.common
 
 import com.example.bankchallenge.R
 import java.util.regex.Pattern
-import javax.inject.Inject
 
-class Validators {
+class Validator {
     private val emailPattern = Pattern.compile("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
     private val passwordPattern =
         Pattern.compile("^(?=.*[A-Z])(?=.*[!@#\$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])(?=\\S+\$).{6,}\$")

@@ -5,14 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankchallenge.R
+import com.example.bankchallenge.domain.common.ProcessState
 import com.example.bankchallenge.domain.common.Result
-import com.example.bankchallenge.domain.common.States
-import com.example.bankchallenge.domain.common.Validators
+import com.example.bankchallenge.domain.common.Validator
 import com.example.bankchallenge.domain.usescases.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,26 +34,26 @@ class LoginViewModel @Inject constructor(
     private val _loginError = mutableStateOf<Int?>(null)
     val loginError: State<Int?> = _loginError
 
-    private val _loginUiStates = MutableStateFlow<States>(States.Idle)
-    val loginUiStates: StateFlow<States> = _loginUiStates.asStateFlow()
+    private val _loginUiProcessState = mutableStateOf<ProcessState>(ProcessState.Idle)
+    val loginUiProcessState: State<ProcessState> = _loginUiProcessState
 
-    private val validators = Validators()
+    private val validator = Validator()
     fun onEmailChanged(email: String) {
         _email.value = email
-        _emailError.value = validators.validateEmail(email)
+        _emailError.value = validator.validateEmail(email)
     }
 
     fun onPasswordChanged(pass: String) {
         _password.value = pass
-        _passwordError.value = validators.validatePassword(pass)
+        _passwordError.value = validator.validatePassword(pass)
     }
 
     fun loginClick(onSuccessfulLogin: () -> Unit) {
-        _loginUiStates.value = States.Loading
+        _loginUiProcessState.value = ProcessState.Loading
         viewModelScope.launch {
             when (val res = loginUseCase.login(_email.value, _password.value)) {
                 is Result.Error -> {
-                    _loginUiStates.value = States.Error(res.errorMessage!!)
+                    _loginUiProcessState.value = ProcessState.Error(res.errorMessage!!)
                     onFailureLogin()
                 }
 

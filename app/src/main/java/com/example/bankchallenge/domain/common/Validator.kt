@@ -17,7 +17,7 @@ class Validator {
     fun validatePassword(password: String) =
         if (password.isBlank()) {
             R.string.error_password_empty
-        } else if (password.length <= 6) {
+        } else if (password.length < 6) {
             R.string.error_password_format
         } else null
 

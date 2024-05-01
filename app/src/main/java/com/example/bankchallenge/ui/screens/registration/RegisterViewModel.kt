@@ -7,9 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankchallenge.R
 import com.example.bankchallenge.domain.common.Result
+import com.example.bankchallenge.domain.common.States
 import com.example.bankchallenge.domain.usescases.RegisterUserUseCase
 import com.example.bankchallenge.utils.UriProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 import javax.inject.Inject
@@ -23,6 +27,7 @@ class RegisterViewModel @Inject constructor(
     private val emailPattern = Pattern.compile("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
     private val passwordPattern =
         Pattern.compile("^(?=.*[A-Z])(?=.*[!@#\$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])(?=\\S+\$).{6,}\$")
+
 
     private val _name = mutableStateOf("")
     val name: State<String> = _name
@@ -53,6 +58,9 @@ class RegisterViewModel @Inject constructor(
 
     private val _failureRegister = mutableStateOf<Int?>(null)
     val failureRegister: State<Int?> = _failureRegister
+
+    private val _loginUiStates = MutableStateFlow<States>(States.Idle)
+    val loginUiStates: StateFlow<States> = _loginUiStates.asStateFlow()
 
     init {
         _availableUri.value = uriProvider.newUri()
@@ -86,6 +94,7 @@ class RegisterViewModel @Inject constructor(
     }
 
     fun onRegisterClick(onSuccessfulLogin: () -> Unit) {
+        _loginUiStates.value = States.Loading
         viewModelScope.launch {
             when (registerUser.register(
                 _email.value,
@@ -93,11 +102,16 @@ class RegisterViewModel @Inject constructor(
                 _name.value,
                 _surname.value
             )) {
-                is Result.Error -> onFailureRegister()
+                is Result.Error -> {
+                    _loginUiStates.value = States.Idle
+                    onFailureRegister()
+                }
+
                 is Result.Success -> onSuccessfulLogin()
             }
         }
     }
+
 
     private fun onFailureRegister() {
         _failureRegister.value = R.string.register_error

@@ -26,6 +26,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -40,12 +42,14 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.bankchallenge.R
+import com.example.bankchallenge.domain.common.States
 
 
 @Composable
 fun RegisterScreen(onRegistrationSuccess: () -> Unit) {
     val viewModel = hiltViewModel<RegisterViewModel>()
     val showPassword = remember { mutableStateOf(false) }
+    val uiState by viewModel.loginUiStates.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -142,10 +146,29 @@ fun RegisterScreen(onRegistrationSuccess: () -> Unit) {
         viewModel.failureRegister.value?.let {
             Text(text = stringResource(id = it), color = MaterialTheme.colorScheme.error)
         }
+        when (uiState) {
+            States.Idle -> {
+                Button(onClick = { viewModel.onRegisterClick(onRegistrationSuccess) }) {
+                    Text("Register")
+                }
+            }
 
-        Button(onClick = { viewModel.onRegisterClick(onRegistrationSuccess) }) {
-            Text("Register")
+            is States.Error -> {
+                Button(onClick = { viewModel.onRegisterClick(onRegistrationSuccess) }) {
+                    Text("Register")
+                }
+            }
+
+            States.Loading -> {
+                Button(
+                    onClick = { viewModel.onRegisterClick(onRegistrationSuccess) },
+                    enabled = false
+                ) {
+                    Text("Register")
+                }
+            }
         }
+
     }
 }
 

@@ -21,4 +21,12 @@ class Validator {
             R.string.error_password_format
         } else null
 
+    fun validateName(name: String) = if (name.isBlank()) {
+        R.string.error_name_empty
+    } else null
+
+    fun validateSurname(name: String) = if (name.isBlank()) {
+        R.string.error_surname_empty
+    } else null
+
 }

@@ -4,10 +4,13 @@
     <string name="error_email_format">Invalid email, expected format is asd@gmail.com</string>
     <string name="error_email_empty">Email is empty</string>
     <string name="error_password_empty">Password is empty</string>
+    <string name="error_name_empty">name is empty</string>
+    <string name="error_surname_empty">Surname is empty</string>
     <string name="error_password_format">Password must be at least 6 characters long</string>
     <string name="error_login_generic">An unexpected error occurred, please verify the entered data</string>
     <string name="error_login_network">There was a network error, please check your connection</string>
     <string name="error_login">Unable to log in, check email and password</string>
+    <string name="error_uri">Please take a photo </string>
 
     <string name="login_show_password">Show password</string>
     <string name="login_hide_password">Hide password</string>

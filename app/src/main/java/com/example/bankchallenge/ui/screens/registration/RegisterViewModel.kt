@@ -17,8 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val registerUser: RegisterUserUseCase,
-    uriProvider: UriProvider
+    private val registerUser: RegisterUserUseCase, uriProvider: UriProvider
 ) : ViewModel() {
 
     private val _name = mutableStateOf("")
@@ -32,6 +31,12 @@ class RegisterViewModel @Inject constructor(
 
     private val _password = mutableStateOf("")
     val password: State<String> = _password
+
+    private val _nameError = mutableStateOf<Int?>(null)
+    val nameError: State<Int?> = _nameError
+
+    private val _surnameError = mutableStateOf<Int?>(null)
+    val surnameError: State<Int?> = _surnameError
 
     private val _emailError = mutableStateOf<Int?>(null)
     val emailError: State<Int?> = _emailError
@@ -69,12 +74,18 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
+    fun onErrorDismiss() {
+        _registerUiProcessState.value = ProcessState.Idle
+    }
+
     fun onNameChanged(name: String) {
         _name.value = name
+        _nameError.value = validator.validateName(name)
     }
 
     fun onSurnameChanged(surname: String) {
         _surname.value = surname
+        _surnameError.value = validator.validateSurname(surname)
     }
 
     fun onEmailChanged(email: String) {
@@ -89,23 +100,42 @@ class RegisterViewModel @Inject constructor(
 
     fun onRegisterClick(onSuccessfulLogin: () -> Unit) {
         _registerUiProcessState.value = ProcessState.Loading
+
+        executeMandatoryValidations()
+        if (fieldsAreInvalid()) {
+            _registerUiProcessState.value = ProcessState.Idle
+            return
+        }
         viewModelScope.launch {
             when (registerUser.register(
-                _email.value,
-                _password.value,
-                _name.value,
-                _surname.value
+                _email.value, _password.value, _name.value, _surname.value
             )) {
                 is Result.Error -> {
                     _registerUiProcessState.value = ProcessState.Idle
                     onFailureRegister()
                 }
 
-                is Result.Success -> onSuccessfulLogin()
+                is Result.Success -> {
+                    _registerUiProcessState.value = ProcessState.Idle
+                    onSuccessfulLogin()
+                }
             }
         }
     }
 
+    private fun executeMandatoryValidations() {
+        _nameError.value = validator.validateName(_name.value)
+        _surnameError.value = validator.validateSurname(_surname.value)
+        _emailError.value = validator.validateEmail(_email.value)
+        _passwordError.value = validator.validatePassword(_password.value)
+        _uriError.value = if (_uri.value == null) {
+            R.string.error_uri
+        } else null
+
+    }
+
+    private fun fieldsAreInvalid() =
+        _nameError.value != null || _surnameError.value != null || _emailError.value != null || _passwordError.value != null || _uriError.value != null
 
     private fun onFailureRegister() {
         _failureRegister.value = R.string.register_error

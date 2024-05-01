@@ -26,8 +26,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -42,7 +40,7 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.bankchallenge.R
-import com.example.bankchallenge.domain.common.ProcessState
+import com.example.bankchallenge.ui.components.StateHandler
 
 
 @Composable
@@ -71,6 +69,9 @@ fun RegisterScreen(onRegistrationSuccess: () -> Unit) {
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
         )
+        viewModel.nameError.value?.let {
+            Text(text = stringResource(id = it), color = MaterialTheme.colorScheme.error)
+        }
         TextField(
             value = viewModel.surname.value,
             onValueChange = { viewModel.onSurnameChanged(it) },
@@ -85,6 +86,9 @@ fun RegisterScreen(onRegistrationSuccess: () -> Unit) {
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
         )
+        viewModel.surnameError.value?.let {
+            Text(text = stringResource(id = it), color = MaterialTheme.colorScheme.error)
+        }
         TextField(
             value = viewModel.email.value,
             onValueChange = { viewModel.onEmailChanged(it) },
@@ -146,30 +150,14 @@ fun RegisterScreen(onRegistrationSuccess: () -> Unit) {
         viewModel.failureRegister.value?.let {
             Text(text = stringResource(id = it), color = MaterialTheme.colorScheme.error)
         }
-        when (viewModel.registerUiProcessState.value) {
-            ProcessState.Idle -> {
-                Button(onClick = { viewModel.onRegisterClick(onRegistrationSuccess) }) {
-                    Text("Register")
-                }
-            }
-
-            is ProcessState.Error -> {
-                Button(onClick = { viewModel.onRegisterClick(onRegistrationSuccess) }) {
-                    Text("Register")
-                }
-            }
-
-            ProcessState.Loading -> {
-                Button(
-                    onClick = { viewModel.onRegisterClick(onRegistrationSuccess) },
-                    enabled = false
-                ) {
-                    Text("Register")
-                }
-            }
+        Button(onClick = { viewModel.onRegisterClick(onRegistrationSuccess) }) {
+            Text("Register")
         }
-
     }
+
+    StateHandler(
+        viewModel.registerUiProcessState.value,
+        onDismissError = { viewModel.onErrorDismiss() })
 }
 
 
@@ -183,7 +171,6 @@ private fun PhotoPicker(
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
             if (it) {
                 onUriLoaded(availableUri)
-
             }
         }
 
@@ -213,8 +200,9 @@ private fun PhotoPicker(
         },
     ) {
         Icon(imageVector = Icons.Filled.CameraAlt, contentDescription = "foto")
-        Text("Profile pi")
+        Text("Profile photo")
     }
+
 }
 
 @Preview(showBackground = true)

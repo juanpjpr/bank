@@ -32,11 +32,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bankchallenge.R
-import com.example.bankchallenge.domain.common.ProcessState
-import com.example.bankchallenge.ui.components.LoadingOverlay
+import com.example.bankchallenge.ui.components.StateHandler
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -111,31 +109,9 @@ fun LoginScreen(onRegisterClicked: () -> Unit, onSuccessfulLogin: () -> Unit) {
         }
     }
 
-    when (val state = viewModel.loginUiProcessState.value) {
-        is ProcessState.Error -> Dialog(onDismissRequest = { viewModel.onErrorDismiss() }) {
-            Surface(
-                shape = MaterialTheme.shapes.medium
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(32.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Text(stringResource(id = state.resId))
-                    Button(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = { viewModel.onErrorDismiss() }) {
-                        Text(text = "Dismiss")
-                    }
-                }
-            }
-        }
-
-        ProcessState.Idle -> Unit
-        ProcessState.Loading -> LoadingOverlay()
-    }
+    StateHandler(
+        viewModel.loginUiProcessState.value,
+        onDismissError = { viewModel.onErrorDismiss() })
 }
 
 @Preview(showBackground = true)

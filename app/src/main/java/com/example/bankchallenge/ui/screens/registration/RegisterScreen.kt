@@ -9,8 +9,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -23,6 +25,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -150,7 +153,12 @@ fun RegisterScreen(onRegistrationSuccess: () -> Unit) {
         viewModel.failureRegister.value?.let {
             Text(text = stringResource(id = it), color = MaterialTheme.colorScheme.error)
         }
-        Button(onClick = { viewModel.onRegisterClick(onRegistrationSuccess) }) {
+
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { viewModel.onRegisterClick(onRegistrationSuccess) }) {
             Text("Register")
         }
     }
@@ -188,7 +196,9 @@ private fun PhotoPicker(
         }
     }
 
-    Button(
+    Spacer(modifier = Modifier.height(16.dp))
+    OutlinedButton(
+        modifier = Modifier.fillMaxWidth(),
         onClick = {
             if (PackageManager.PERMISSION_GRANTED ==
                 ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)

@@ -1,31 +1,31 @@
 <resources>
     <string name="app_name">BankChallenge</string>
 
-    <string name="error_email_format">No es un email válido, el formato esperado es asd@gmail.com</string>
-    <string name="error_email_empty">El email esta vacio</string>
-    <string name="error_password_empty">Contraseña vacia</string>
-    <string name="error_password_format">La contraseña debe tener 6 caracteres como minimo</string>
-    <string name="error_login_generic">Hubo un error inesperado, verifica los datos ingresados</string>
-    <string name="error_login_network">Hubo un error de conexion, revisa tu conexion</string>
-    <string name="error_login">No se pudo iniciar sesion, revisar mail y contraseña</string>
+    <string name="error_email_format">Invalid email, expected format is asd@gmail.com</string>
+    <string name="error_email_empty">Email is empty</string>
+    <string name="error_password_empty">Password is empty</string>
+    <string name="error_password_format">Password must be at least 6 characters long</string>
+    <string name="error_login_generic">An unexpected error occurred, please verify the entered data</string>
+    <string name="error_login_network">There was a network error, please check your connection</string>
+    <string name="error_login">Unable to log in, check email and password</string>
 
-    <string name="login_show_password">Mostrar contraseña</string>
-    <string name="login_hide_password">Ocultar contraseña</string>
-    <string name="login_email">Ingrese email</string>
+    <string name="login_show_password">Show password</string>
+    <string name="login_hide_password">Hide password</string>
+    <string name="login_email">Enter email</string>
 
-    <string name="register_camera_revoke">No tiene permisos para utilizar la camara</string>
+    <string name="register_camera_revoke">You do not have permissions to use the camera</string>
 
     <string name="register_photo_id">ID photo</string>
-    <string name="register_error_photo">Error al sacar la foto, intentelo otra vez</string>
+    <string name="register_error_photo">Error taking photo, please try again</string>
 
-    <string name="register_firebase_email_collision">Email ya en uso</string>
-    <string name="register_firebase_weak_pass">Contraseña demaciado debil</string>
-    <string name="register_firebase_error_invalid_credentials">Email invalido</string>
-    <string name="register_firebase_unknown">Error desconocido</string>
-    <string name="register_firebase_network">Error de conexion, intente otra vez</string>
-    <string name="register_firebase_error_id">Error al intentar obtener el id</string>
-    <string name="register_firebase_save_user_error">Error al intentar guardar el nuevo usuario, intente mas tarde</string>
-    <string name="register_error">Error al intentar registrar usuario</string>
+    <string name="register_firebase_email_collision">Email already in use</string>
+    <string name="register_firebase_weak_pass">Password too weak</string>
+    <string name="register_firebase_error_invalid_credentials">Invalid email</string>
+    <string name="register_firebase_unknown">Unknown error</string>
+    <string name="register_firebase_network">Connection error, please try again</string>
+    <string name="register_firebase_error_id">Error trying to obtain ID</string>
+    <string name="register_firebase_save_user_error">Error trying to save new user, please try again later</string>
+    <string name="register_error">Error trying to register user</string>
 
 
 </resources>

@@ -2,6 +2,7 @@ package com.example.bankchallenge.ui.navigation
 
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -21,15 +22,31 @@ fun NavGraph() {
     NavHost(navController = navController, startDestination = LOGIN_ROUTE) {
         composable(LOGIN_ROUTE) {
             LoginScreen({ navController.navigate(REGISTER_ROUTE) }) {
-                navController.navigate(
-                    HOME_ROUTE
-                )
+                navController.navSingleTop(HOME_ROUTE)
             }
         }
         composable(HOME_ROUTE) { HomeScreen() }
 
-        composable(REGISTER_ROUTE) { RegisterScreen { navController.navigate(SUCCESS_ROUTE) } }
+        composable(REGISTER_ROUTE) {
+            RegisterScreen {
+                navController.navSingleTop(SUCCESS_ROUTE)
+            }
+        }
 
-        composable(SUCCESS_ROUTE) { SuccessScreen { navController.navigate(HOME_ROUTE) } }
+        composable(SUCCESS_ROUTE) { SuccessScreen { navController.navSingleTop(HOME_ROUTE) } }
     }
 }
+
+private fun NavHostController.navSingleTop(route: String) {
+    popBackStack()
+    navigate(route) {
+        popUpTo(graph.id) {
+            inclusive = true
+        }
+        launchSingleTop = true
+    }
+}
+
+
+
+

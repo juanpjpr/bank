@@ -48,9 +48,19 @@ class LoginViewModel @Inject constructor(
         _passwordError.value = validator.validatePassword(pass)
     }
 
+    fun onErrorDismiss() {
+        _loginUiProcessState.value = ProcessState.Idle
+    }
+
+
     fun loginClick(onSuccessfulLogin: () -> Unit) {
         _loginUiProcessState.value = ProcessState.Loading
+        executeMandatoryValidations()
 
+        if (fieldsAreInvalid()) {
+            _loginUiProcessState.value = ProcessState.Idle
+            return
+        }
         viewModelScope.launch {
             when (val res = loginUseCase.login(_email.value, _password.value)) {
                 is Result.Error -> {
@@ -63,12 +73,15 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun onFailureLogin() {
-        _loginError.value = R.string.error_login
+    private fun executeMandatoryValidations() {
+        _emailError.value = validator.validateEmail(_email.value)
+        _passwordError.value = validator.validatePassword(_password.value)
+
     }
 
-    fun onErrorDismiss() {
-        _loginUiProcessState.value = ProcessState.Idle
+    private fun fieldsAreInvalid() = _emailError.value != null || _passwordError.value != null
+    private fun onFailureLogin() {
+        _loginError.value = R.string.error_login
     }
 
 

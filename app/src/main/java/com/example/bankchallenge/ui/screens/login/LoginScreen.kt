@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -20,8 +21,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,11 +32,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bankchallenge.R
 import com.example.bankchallenge.domain.common.ProcessState
+import com.example.bankchallenge.ui.components.LoadingOverlay
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(onRegisterClicked: () -> Unit, onSuccessfulLogin: () -> Unit) {
     val viewModel = hiltViewModel<LoginViewModel>()
@@ -102,25 +104,40 @@ fun LoginScreen(onRegisterClicked: () -> Unit, onSuccessfulLogin: () -> Unit) {
             Text(text = stringResource(id = it), color = MaterialTheme.colorScheme.error)
         }
         Spacer(modifier = Modifier.height(16.dp))
-        when (viewModel.loginUiProcessState.value) {
-            is ProcessState.Error -> {}
-            ProcessState.Idle -> {
-                Button(onClick = { viewModel.loginClick(onSuccessfulLogin) }) {
-                    Text("Login")
-                }
-            }
-
-            ProcessState.Loading -> Button(
-                onClick = { viewModel.loginClick(onSuccessfulLogin) }, enabled = false
-            ) {
-                Text("Login")
-            }
+        Button(onClick = { viewModel.loginClick(onSuccessfulLogin) }) {
+            Text("Login")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = { onRegisterClicked() }) {
             Text("Register")
         }
+    }
+
+    when (val state = viewModel.loginUiProcessState.value) {
+        is ProcessState.Error -> Dialog(onDismissRequest = { viewModel.onErrorDismiss() }) {
+            Surface(
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(32.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(stringResource(id = state.resId))
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = { viewModel.onErrorDismiss() }) {
+                        Text(text = "Dismiss")
+                    }
+                }
+            }
+        }
+
+        ProcessState.Idle -> Unit
+        ProcessState.Loading -> LoadingOverlay()
     }
 }
 

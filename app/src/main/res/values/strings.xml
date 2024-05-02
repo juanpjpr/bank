@@ -29,6 +29,7 @@
     <string name="register_firebase_error_id">Error trying to obtain ID</string>
     <string name="register_firebase_save_user_error">Error trying to save new user, please try again later</string>
     <string name="register_error">Error trying to register user</string>
+    <string name="home_top_app_bar_name"></string>
 
 
 </resources>
